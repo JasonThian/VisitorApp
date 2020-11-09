@@ -37,15 +37,17 @@ public class GetQrCode extends AppCompatActivity {
     }
 
     private void startCamera() {
-        cameraProviderFuture.addListener(() -> {
-            try {
-                Toast.makeText(getApplicationContext(),"Starting camera",Toast.LENGTH_SHORT).show();
-                ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
-                GetQrCode.this.bindCameraPreview(cameraProvider);
-            } catch (ExecutionException | InterruptedException e) {
-                Toast.makeText(GetQrCode.this, "Error starting camera " + e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        }, ContextCompat.getMainExecutor(this));
+        runOnUiThread(() -> {
+            cameraProviderFuture.addListener(() -> {
+                try {
+                    Toast.makeText(getApplicationContext(),"Starting camera",Toast.LENGTH_SHORT).show();
+                    ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
+                    GetQrCode.this.bindCameraPreview(cameraProvider);
+                } catch (ExecutionException | InterruptedException e) {
+                    Toast.makeText(GetQrCode.this, "Error starting camera " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }, ContextCompat.getMainExecutor(this));
+        });
     }
 
     private void bindCameraPreview(@NonNull ProcessCameraProvider cameraProvider) {
