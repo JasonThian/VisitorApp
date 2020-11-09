@@ -42,6 +42,7 @@ public class GetQrCode extends AppCompatActivity {
             @Override
             public void run() {
                 try {
+                    Toast.makeText(getApplicationContext(),"Starting camera",Toast.LENGTH_SHORT).show();
                     ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
                     GetQrCode.this.bindCameraPreview(cameraProvider);
                 } catch (ExecutionException | InterruptedException e) {
