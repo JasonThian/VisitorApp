@@ -27,34 +27,22 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        mAuth.signInWithEmailAndPassword("guard@gmail.com", "guardpass")
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            setContentView(R.layout.activity_main);
+            FirebaseAuth mAuth = FirebaseAuth.getInstance();
+            mAuth.signInWithEmailAndPassword("guard@gmail.com", "guardpass")
+                    .addOnCompleteListener(this, task -> {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = mAuth.getCurrentUser();
                         } else {
-                            // If sign in fails, display a message to the user.
                             Log.w("error", "signInWithEmail:failure", task.getException());
                         }
-
-                        // ...
-                    }
-                });
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                    });
+            FirebaseUser currentUser = mAuth.getCurrentUser();
             Button button = findViewById(R.id.QrCodeScanner);
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(MainActivity.this, GetQrCode.class);
-                    startActivityForResult(intent, REQUEST_QRCODE);
-                }
+            button.setOnClickListener(v -> {
+                Intent intent = new Intent(MainActivity.this, GetQrCode.class);
+                startActivityForResult(intent, REQUEST_QRCODE);
             });
         } else {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {

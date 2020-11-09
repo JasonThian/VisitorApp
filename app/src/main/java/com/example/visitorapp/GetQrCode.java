@@ -30,46 +30,37 @@ public class GetQrCode extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_get_qr_code);
-
+        cameraProviderFuture = ProcessCameraProvider.getInstance(this);
         previewView = findViewById(R.id.activity_main_previewView);
         // Enables Always-on
-        cameraProviderFuture = ProcessCameraProvider.getInstance(this);
         startCamera();
     }
 
     private void startCamera() {
-        cameraProviderFuture.addListener(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Toast.makeText(getApplicationContext(),"Starting camera",Toast.LENGTH_SHORT).show();
-                    ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
-                    GetQrCode.this.bindCameraPreview(cameraProvider);
-                } catch (ExecutionException | InterruptedException e) {
-                    Toast.makeText(GetQrCode.this, "Error starting camera " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
+        cameraProviderFuture.addListener(() -> {
+            try {
+                Toast.makeText(getApplicationContext(),"Starting camera",Toast.LENGTH_SHORT).show();
+                ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
+                GetQrCode.this.bindCameraPreview(cameraProvider);
+            } catch (ExecutionException | InterruptedException e) {
+                Toast.makeText(GetQrCode.this, "Error starting camera " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }, ContextCompat.getMainExecutor(this));
     }
 
     private void bindCameraPreview(@NonNull ProcessCameraProvider cameraProvider) {
         previewView.setImplementationMode(PreviewView.ImplementationMode.COMPATIBLE);
-
         Preview preview = new Preview.Builder()
                 .build();
-
         CameraSelector cameraSelector = new CameraSelector.Builder()
                 .requireLensFacing(CameraSelector.LENS_FACING_BACK)
                 .build();
-
         preview.setSurfaceProvider(previewView.getSurfaceProvider());
-
         ImageAnalysis imageAnalysis =
                 new ImageAnalysis.Builder()
                         .setTargetResolution(new Size(1280, 720))
                         .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                         .build();
-
         imageAnalysis.setAnalyzer(ContextCompat.getMainExecutor(this), new QRCodeImageAnalyzer(new QRCodeFoundListener() {
             @Override
             public void onQRCodeFound(String _qrCode) {
@@ -79,13 +70,10 @@ public class GetQrCode extends AppCompatActivity {
                 setResult(MainActivity.REQUEST_QRCODE, intent);
                 finish();
             }
-
             @Override
             public void qrCodeNotFound() {
-
             }
         }));
-
         Camera camera = cameraProvider.bindToLifecycle((LifecycleOwner)this, cameraSelector, imageAnalysis, preview);
     }
 }

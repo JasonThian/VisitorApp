@@ -28,11 +28,9 @@ import java.util.List;
 import java.util.Map;
 
 public class MainActivity2 extends AppCompatActivity {
-
     private String data = "", unit = "", contact = "", ic = "", username = "";
     private Date expire = new Date();
     private Map<String, Object> visitor = new HashMap<>();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,21 +72,18 @@ public class MainActivity2 extends AppCompatActivity {
                             text.setVisibility(View.VISIBLE);
                             carplateno.setVisibility(View.VISIBLE);
                             submit.setVisibility(View.VISIBLE);
-                            submit.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    if(carplateno.getText().toString().matches(""))
-                                        visitor.put("carplate",null);
-                                    else
-                                        visitor.put("carplate",carplateno.getText().toString());
-                                    visitor.put("status","Check-In");
-                                    db.collection("visitor").add(visitor).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<DocumentReference> task) {
-                                            success();
-                                        }
-                                    });
-                                }
+                            submit.setOnClickListener(view -> {
+                                if(carplateno.getText().toString().matches(""))
+                                    visitor.put("carplate",null);
+                                else
+                                    visitor.put("carplate",carplateno.getText().toString());
+                                visitor.put("status","Check-In");
+                                db.collection("visitor").add(visitor).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentReference> task1) {
+                                        success();
+                                    }
+                                });
                             });
                         }
                         else
@@ -116,7 +111,6 @@ public class MainActivity2 extends AppCompatActivity {
             mTextView.setText("Invalid QR Code");
         }
     }
-
     void success(){
         Intent intent = new Intent(MainActivity2.this,MainActivity3.class);
         startActivity(intent);
