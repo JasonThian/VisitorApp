@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-            Button button = findViewById(R.id.QrCode);
+            Button button = findViewById(R.id.QrCodeScanner);
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
