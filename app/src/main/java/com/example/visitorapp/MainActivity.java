@@ -5,21 +5,13 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
-
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.zxing.qrcode.encoder.QRCode;
 
 public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_CAMERA = 0;
@@ -49,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
             FirebaseUser currentUser = mAuth.getCurrentUser();
             Button button = findViewById(R.id.QrCodeScanner);
             button.setOnClickListener(v -> {
-                Intent intent = new Intent(MainActivity.this, GetQrCode.class);
+                Intent intent = new Intent(MainActivity.this, GetQrCodeData.class);
                 startActivityForResult(intent, REQUEST_QRCODE);
             });
         }
