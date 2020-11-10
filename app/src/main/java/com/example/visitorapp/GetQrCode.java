@@ -71,7 +71,7 @@ public class GetQrCode extends AppCompatActivity {
                     @Override
                     public void onQRCodeFound(String _qrCode) {
                         textView.setText("QR Code Found");
-                        Toast.makeText(getApplicationContext(),"QR Code Found",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),"QR Code Found",Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(GetQrCode.this, MainActivity2.class);
                         qrCode = _qrCode;
                         intent.putExtra("data", qrCode);

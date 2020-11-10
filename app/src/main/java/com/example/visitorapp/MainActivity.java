@@ -6,6 +6,8 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.Toast;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -64,5 +66,7 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra("data", data.getStringExtra("data"));
             startActivity(intent);
         }
+        else
+            Toast.makeText(getApplicationContext(),"Data is null", Toast.LENGTH_LONG).show();
     }
 }
