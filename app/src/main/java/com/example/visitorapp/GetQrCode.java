@@ -37,45 +37,49 @@ public class GetQrCode extends AppCompatActivity {
     }
 
     private void startCamera() {
-        runOnUiThread(() -> {
-            cameraProviderFuture.addListener(() -> {
-                try {
-                    Toast.makeText(getApplicationContext(),"Starting camera",Toast.LENGTH_SHORT).show();
-                    ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
-                    GetQrCode.this.bindCameraPreview(cameraProvider);
-                } catch (ExecutionException | InterruptedException e) {
-                    Toast.makeText(GetQrCode.this, "Error starting camera " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }, ContextCompat.getMainExecutor(this));
-        });
+        cameraProviderFuture.addListener(() -> {
+            try {
+                Toast.makeText(getApplicationContext(),"Starting camera",Toast.LENGTH_SHORT).show();
+                ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
+                GetQrCode.this.bindCameraPreview(cameraProvider);
+            } catch (ExecutionException | InterruptedException e) {
+                Toast.makeText(GetQrCode.this, "Error starting camera " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }, ContextCompat.getMainExecutor(this));
     }
 
     private void bindCameraPreview(@NonNull ProcessCameraProvider cameraProvider) {
-        previewView.setImplementationMode(PreviewView.ImplementationMode.COMPATIBLE);
+        previewView.setImplementationMode(PreviewView.ImplementationMode.PERFORMANCE);
         Preview preview = new Preview.Builder()
                 .build();
         CameraSelector cameraSelector = new CameraSelector.Builder()
                 .requireLensFacing(CameraSelector.LENS_FACING_BACK)
                 .build();
         preview.setSurfaceProvider(previewView.getSurfaceProvider());
-        ImageAnalysis imageAnalysis =
-                new ImageAnalysis.Builder()
-                        .setTargetResolution(new Size(1280, 720))
-                        .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-                        .build();
-        imageAnalysis.setAnalyzer(ContextCompat.getMainExecutor(this), new QRCodeImageAnalyzer(new QRCodeFoundListener() {
+        runOnUiThread(new Runnable() {
             @Override
-            public void onQRCodeFound(String _qrCode) {
-                Intent intent = new Intent(GetQrCode.this, MainActivity2.class);
-                qrCode = _qrCode;
-                intent.putExtra("data", qrCode);
-                setResult(MainActivity.REQUEST_QRCODE, intent);
-                finish();
+            public void run() {
+                ImageAnalysis imageAnalysis =
+                        new ImageAnalysis.Builder()
+                                .setTargetResolution(new Size(640, 720))
+                                .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                                .build();
+                imageAnalysis.setAnalyzer(ContextCompat.getMainExecutor(GetQrCode.this), new QRCodeImageAnalyzer(new QRCodeFoundListener() {
+                    @Override
+                    public void onQRCodeFound(String _qrCode) {
+                        Toast.makeText(getApplicationContext(),"QR Code Found",Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(GetQrCode.this, MainActivity2.class);
+                        qrCode = _qrCode;
+                        intent.putExtra("data", qrCode);
+                        setResult(MainActivity.REQUEST_QRCODE, intent);
+                        finish();
+                    }
+                    @Override
+                    public void qrCodeNotFound() {
+                    }
+                }));
+                Camera camera = cameraProvider.bindToLifecycle((LifecycleOwner)GetQrCode.this, cameraSelector, imageAnalysis, preview);
             }
-            @Override
-            public void qrCodeNotFound() {
-            }
-        }));
-        Camera camera = cameraProvider.bindToLifecycle((LifecycleOwner)this, cameraSelector, imageAnalysis, preview);
+        });
     }
 }

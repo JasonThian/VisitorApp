@@ -33,6 +33,7 @@ public class GetQrCodeData extends AppCompatActivity {
         setContentView(R.layout.activity_get_qr_code_data);
         surfaceView = findViewById(R.id.cameraView);
         barcodeDetector = new BarcodeDetector.Builder(this).setBarcodeFormats(Barcode.QR_CODE).build();
+        barcodeDetector.setFocus(1);
         cameraSource = new CameraSource.Builder(this, barcodeDetector).setRequestedPreviewSize(680, 480).build();
         surfaceView.getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
@@ -82,6 +83,7 @@ public class GetQrCodeData extends AppCompatActivity {
                     runOnUiThread(() -> {
                         Vibrator vibrator = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
                         vibrator.vibrate(1000);
+                        cameraSource.stop();
                         Intent intent = new Intent(GetQrCodeData.this, MainActivity2.class);
                         intent.putExtra("data",qrCodes.toString());
                         startActivity(intent);
