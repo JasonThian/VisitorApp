@@ -55,7 +55,6 @@ public class MainActivity2 extends AppCompatActivity {
             contact = datas[1];
             ic = datas[2];
             username = datas[3];
-            Log.d("expire_time", datas[4].trim());
             expire.setTime(Long.parseLong(datas[4].trim()));
             db.collection("visitor").whereEqualTo("username",username).whereEqualTo("expire_time",expire).limit(1).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override

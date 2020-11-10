@@ -59,8 +59,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d("request",String.valueOf(requestCode));
-        Log.d("request",String.valueOf(resultCode));
         if(data != null) {
             Intent intent = new Intent(MainActivity.this, MainActivity2.class);
             intent.putExtra("data", data.getStringExtra("data"));
