@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
             FirebaseUser currentUser = mAuth.getCurrentUser();
             Button button = findViewById(R.id.QrCodeScanner);
             button.setOnClickListener(v -> {
-                Intent intent = new Intent(MainActivity.this, QrCode.class);
+                Intent intent = new Intent(MainActivity.this, GetQrCode.class);
                 startActivityForResult(intent, REQUEST_QRCODE);
             });
         }
