@@ -3,6 +3,7 @@ package com.example.visitorapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Size;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,11 +26,13 @@ public class GetQrCode extends AppCompatActivity {
     private PreviewView previewView;
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     private String qrCode;
+    private TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_get_qr_code);
+        textView = findViewById(R.id.setText);
         cameraProviderFuture = ProcessCameraProvider.getInstance(this);
         previewView = findViewById(R.id.activity_main_previewView);
         // Enables Always-on
@@ -67,6 +70,7 @@ public class GetQrCode extends AppCompatActivity {
                 imageAnalysis.setAnalyzer(ContextCompat.getMainExecutor(GetQrCode.this), new QRCodeImageAnalyzer(new QRCodeFoundListener() {
                     @Override
                     public void onQRCodeFound(String _qrCode) {
+                        textView.setText("QR Code Found");
                         Toast.makeText(getApplicationContext(),"QR Code Found",Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(GetQrCode.this, MainActivity2.class);
                         qrCode = _qrCode;
@@ -76,6 +80,7 @@ public class GetQrCode extends AppCompatActivity {
                     }
                     @Override
                     public void qrCodeNotFound() {
+                        textView.setText("QR Code Not Found");
                     }
                 }));
                 Camera camera = cameraProvider.bindToLifecycle((LifecycleOwner)GetQrCode.this, cameraSelector, imageAnalysis, preview);
