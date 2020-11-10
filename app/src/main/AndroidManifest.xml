@@ -19,6 +19,7 @@
         <activity android:name=".MainActivity3" />
         <activity android:name=".MainActivity2" />
         <activity android:name=".GetQrCode" />
+        <activity android:name=".QrCode" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
